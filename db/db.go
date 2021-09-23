@@ -1,8 +1,6 @@
 package db
 
 import (
-	"fmt"
-
 	"github.com/NAM/namcoin/utils"
 	"github.com/boltdb/bolt"
 )
@@ -11,6 +9,8 @@ const (
 	dbName       = "blockchain.db"
 	dataBucket   = "data"
 	blocksBucket = "blocks"
+
+	checkpoint = "checkpoint"
 )
 
 var db *bolt.DB
@@ -31,8 +31,11 @@ func DB() *bolt.DB {
 	return db
 }
 
-func SaveBlock(hash string, data []byte) {
-	fmt.Printf("Saving Block %s\n Data: %b\n", hash, data)
+func Close() {
+	DB().Close()
+}
+
+func SaveBlock(hash string, data []byte) { // struct니까 []byte 형식으로 저장
 	err := DB().Update(func(t *bolt.Tx) error {
 		bucket := t.Bucket([]byte(blocksBucket))
 		err := bucket.Put([]byte(hash), data)
@@ -41,11 +44,31 @@ func SaveBlock(hash string, data []byte) {
 	utils.HandleErr(err)
 }
 
-func SaveBlockchain(data []byte) {
+func SaveBlockchain(data []byte) { // struct니까 []byte 형식으로 저장
 	err := DB().Update(func(t *bolt.Tx) error {
 		bucket := t.Bucket([]byte(dataBucket))
-		err := bucket.Put([]byte("checkpoint"), data)
+		err := bucket.Put([]byte(checkpoint), data)
 		return err
 	})
 	utils.HandleErr(err)
+}
+
+func SaveCheckpoint() []byte {
+	var data []byte
+	DB().View(func(t *bolt.Tx) error {
+		bucket := t.Bucket([]byte(dataBucket))
+		data = bucket.Get([]byte(checkpoint))
+		return nil
+	})
+	return data
+}
+
+func Block(hash string) []byte {
+	var data []byte
+	DB().View(func(t *bolt.Tx) error {
+		bucket := t.Bucket([]byte(blocksBucket))
+		data = bucket.Get([]byte(hash))
+		return nil
+	})
+	return data
 }

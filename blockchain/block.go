@@ -1,9 +1,8 @@
 package blockchain
 
 import (
-	"bytes"
 	"crypto/sha256"
-	"encoding/gob"
+	"errors"
 	"fmt"
 
 	"github.com/NAM/namcoin/db"
@@ -17,15 +16,24 @@ type Block struct {
 	Height   int    `json:"height"`
 }
 
-func (b *Block) toBytes() []byte {
-	var blockBuffer bytes.Buffer
-	encoder := gob.NewEncoder(&blockBuffer)
-	utils.HandleErr(encoder.Encode(b))
-	return blockBuffer.Bytes()
-}
+var ErrNotFound = errors.New("Block not found")
 
 func (b *Block) persist() {
-	db.SaveBlock(b.Hash, b.toBytes())
+	db.SaveBlock(b.Hash, utils.ToBytes(b))
+}
+
+func (b *Block) restore(data []byte) {
+	utils.FromBytes(b, data)
+}
+
+func FindBlock(hash string) (*Block, error) {
+	blockBytes := db.Block(hash)
+	if blockBytes == nil {
+		return nil, ErrNotFound
+	}
+	block := &Block{}
+	block.restore(blockBytes)
+	return block, nil
 }
 
 func createBlock(data string, prevHash string, height int) *Block {
@@ -36,7 +44,7 @@ func createBlock(data string, prevHash string, height int) *Block {
 		Height:   height,
 	}
 	payload := block.Data + block.PrevHash + fmt.Sprint(block.Height)
-	block.Hash = fmt.Sprintf("%s", sha256.Sum256([]byte(payload)))
+	block.Hash = fmt.Sprintf("%x", sha256.Sum256([]byte(payload)))
 	block.persist()
 	return block
 }

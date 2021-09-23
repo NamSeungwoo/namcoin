@@ -1,7 +1,11 @@
 package main
 
-import "github.com/NAM/namcoin/blockchain"
+import (
+	"github.com/NAM/namcoin/cli"
+	"github.com/NAM/namcoin/db"
+)
 
 func main() {
-	blockchain.Blockchain()
+	defer db.Close()
+	cli.Start()
 }
