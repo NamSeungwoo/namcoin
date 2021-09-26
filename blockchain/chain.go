@@ -32,9 +32,9 @@ func (b *blockchain) persist() {
 	db.SaveBlockchain(utils.ToBytes(b))
 }
 
-func (b *blockchain) AddBlock(data string) {
+func (b *blockchain) AddBlock() {
 
-	block := createBlock(data, b.NewestHash, b.Height+1)
+	block := createBlock(b.NewestHash, b.Height+1)
 	b.NewestHash = block.Hash
 	b.Height = block.Height
 	b.CurrentDifficulty = block.Difficulty
@@ -81,6 +81,38 @@ func (b *blockchain) difficulty() int {
 	}
 }
 
+func (b *blockchain) txOuts() []*TxOut {
+	var txOuts []*TxOut
+	blocks := b.Blocks()
+	for _, block := range blocks {
+		for _, tx := range block.Transactions {
+			txOuts = append(txOuts, tx.TxOuts...) // argument 뒤에 오는 ...는 unpack을 의미
+
+		}
+	}
+	return txOuts
+}
+
+func (b *blockchain) TxOutsByAddress(address string) []*TxOut {
+	var ownedTxOuts []*TxOut
+	txOuts := b.txOuts()
+	for _, txOut := range txOuts {
+		if txOut.Owner == address {
+			ownedTxOuts = append(ownedTxOuts, txOut)
+		}
+	}
+	return ownedTxOuts
+}
+
+func (b *blockchain) BalanceByAddress(address string) int {
+	txOuts := b.TxOutsByAddress(address)
+	var amount int
+	for _, txOut := range txOuts {
+		amount += txOut.Amount
+	}
+	return amount
+}
+
 func Blockchain() *blockchain {
 	if b == nil {
 		once.Do(func() {
@@ -91,7 +123,7 @@ func Blockchain() *blockchain {
 			// search for checkpoint on the db
 			checkpoint := db.SaveCheckpoint()
 			if checkpoint == nil {
-				b.AddBlock("Genesis")
+				b.AddBlock()
 			} else {
 				// restore b from bytes
 				b.restore(checkpoint)
@@ -104,5 +136,5 @@ func Blockchain() *blockchain {
 }
 
 func (b *Block) PrintAllMembers() {
-	fmt.Println("data:", b.Data, "hash:", b.Hash, "prevhash:", b.PrevHash)
+	fmt.Println("hash:", b.Hash, "prevhash:", b.PrevHash)
 }
