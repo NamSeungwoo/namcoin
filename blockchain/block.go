@@ -57,12 +57,12 @@ func (b *Block) mine() {
 	}
 }
 
-func createBlock(prevHash string, height int) *Block {
+func createBlock(prevHash string, height, diff int) *Block {
 	block := &Block{
 		Hash:       "",
 		PrevHash:   prevHash,
 		Height:     height,
-		Difficulty: Blockchain().difficulty(),
+		Difficulty: diff,
 		Nonce:      0,
 	}
 	// 채굴을 끝내고 해시를 찾고 전부 끝낸 다음에 트랜잭션들을 Block에 넣음
