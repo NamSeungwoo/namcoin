@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/NAM/namcoin/blockchain"
+	"github.com/NamSeungwoo/namcoin/blockchain"
 )
 
 var templates *template.Template

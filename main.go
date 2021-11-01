@@ -1,6 +1,6 @@
 package main
 
-import "github.com/NAM/namcoin/wallet"
+import "github.com/NamSeungwoo/namcoin/wallet"
 
 func main() {
 
@@ -8,5 +8,5 @@ func main() {
 	// fmt.Printf("%x\n", hash)
 	// defer db.Close()
 	// cli.Start()
-	wallet.Start()
+	wallet.Wallet()
 }

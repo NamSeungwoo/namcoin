@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/NAM/namcoin/blockchain"
-	"github.com/NAM/namcoin/utils"
+	"github.com/NamSeungwoo/namcoin/blockchain"
+	"github.com/NamSeungwoo/namcoin/utils"
 	"github.com/gorilla/mux"
 )
 

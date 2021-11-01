@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/NAM/namcoin/utils"
+	"github.com/NamSeungwoo/namcoin/utils"
 	"github.com/boltdb/bolt"
 )
 

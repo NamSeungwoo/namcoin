@@ -6,8 +6,8 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/NAM/namcoin/explorer"
-	"github.com/NAM/namcoin/rest"
+	"github.com/NamSeungwoo/namcoin/explorer"
+	"github.com/NamSeungwoo/namcoin/rest"
 )
 
 func usage() {

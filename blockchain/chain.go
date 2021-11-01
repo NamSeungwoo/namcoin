@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/NAM/namcoin/db"
-	"github.com/NAM/namcoin/utils"
+	"github.com/NamSeungwoo/namcoin/db"
+	"github.com/NamSeungwoo/namcoin/utils"
 )
 
 const (
