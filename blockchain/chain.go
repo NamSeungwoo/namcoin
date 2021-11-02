@@ -56,6 +56,23 @@ func Blocks(b *blockchain) []*Block {
 	return blocks
 }
 
+func Txs(b *blockchain) []*Tx {
+	var txs []*Tx
+	for _, block := range Blocks(b) {
+		txs = append(txs, block.Transactions...)
+	}
+	return txs
+}
+
+func FindTx(b *blockchain, targetID string) *Tx {
+	for _, tx := range Txs(b) {
+		if tx.Id == targetID {
+			return tx
+		}
+	}
+	return nil
+}
+
 func recalculateDifficulty(b *blockchain) int {
 	allBlocks := Blocks(b)
 	newestBlock := allBlocks[0]                              // 가장 최근 블록은 allBlocks[0]
@@ -88,7 +105,7 @@ func UTxOutsByAddress(address string, b *blockchain) []*UTxOut {
 		for _, tx := range block.Transactions {
 			for _, input := range tx.TxIns {
 				if input.Owner == address {
-					creatorTxs[input.TxID] = true
+					creatorTxs[input.targetID] = true
 				}
 			}
 			for index, output := range tx.TxOuts {
