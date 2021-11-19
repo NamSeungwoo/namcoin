@@ -2,7 +2,6 @@ package blockchain
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 	"time"
 
@@ -44,11 +43,10 @@ func (b *Block) mine() {
 	target := strings.Repeat("0", b.Difficulty)
 
 	for {
-
+		b.Timestamp = int(time.Now().Unix())
 		hash := utils.Hash(b)
-		fmt.Printf("\n\nTarget:%s\nHash:%s\nNonce:%d\n\n", target, hash, b.Nonce)
 		if strings.HasPrefix(hash, target) {
-			b.Timestamp = int(time.Now().Unix())
+
 			b.Hash = hash
 			break
 		} else {
