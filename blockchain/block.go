@@ -21,7 +21,7 @@ type Block struct {
 
 var ErrNotFound = errors.New("Block not found")
 
-func (b *Block) persist() {
+func persistBlock(b *Block) {
 	db.SaveBlock(b.Hash, utils.ToBytes(b))
 }
 
@@ -66,6 +66,6 @@ func createBlock(prevHash string, height, diff int) *Block {
 	// 채굴을 끝내고 해시를 찾고 전부 끝낸 다음에 트랜잭션들을 Block에 넣음
 	block.mine()
 	block.Transactions = Mempool.TxToConfirm()
-	block.persist()
+	persistBlock(block)
 	return block
 }
