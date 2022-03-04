@@ -146,18 +146,13 @@ func Blockchain() *blockchain {
 		b = &blockchain{
 			Height: 0,
 		}
-
-		// search for checkpoint on the db
 		checkpoint := db.SaveCheckpoint()
 		if checkpoint == nil {
 			b.AddBlock()
 		} else {
-			// restore b from bytes
 			b.restore(checkpoint)
 		}
-
 	})
-	fmt.Println(b.NewestHash)
 	return b
 }
 
@@ -182,4 +177,26 @@ func (b *blockchain) Replace(newBlocks []*Block) {
 	for _, block := range newBlocks {
 		persistBlock(block)
 	}
+}
+
+func (b *blockchain) AddPeerBlock(newBlock *Block) {
+	b.m.Lock()
+	m.m.Lock()
+	defer b.m.Unlock()
+	defer m.m.Unlock()
+
+	b.Height += 1
+	b.CurrentDifficulty = newBlock.Difficulty
+	b.NewestHash = newBlock.Hash
+
+	persistBlockchain(b)
+	persistBlock(newBlock)
+
+	for _, tx := range newBlock.Transactions {
+		_, ok := m.Txs[tx.Id]
+		if ok {
+			delete(m.Txs, tx.Id)
+		}
+	}
+
 }

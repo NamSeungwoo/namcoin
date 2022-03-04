@@ -65,7 +65,7 @@ func createBlock(prevHash string, height, diff int) *Block {
 	}
 	// 채굴을 끝내고 해시를 찾고 전부 끝낸 다음에 트랜잭션들을 Block에 넣음
 	block.mine()
-	block.Transactions = Mempool.TxToConfirm()
+	block.Transactions = Mempool().TxToConfirm()
 	persistBlock(block)
 	return block
 }
