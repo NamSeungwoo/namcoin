@@ -13,4 +13,5 @@ require (
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	go.etcd.io/bbolt v1.3.6 // indirect
 	golang.org/x/sys v0.0.0-20211029165221-6e7872819dc8 // indirect
+	golang.org/x/tools v0.1.10 // indirect
 )
