@@ -5,7 +5,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/NamSeungwoo/namcoin/db"
 	"github.com/NamSeungwoo/namcoin/utils"
 )
 
@@ -22,7 +21,7 @@ type Block struct {
 var ErrNotFound = errors.New("Block not found")
 
 func persistBlock(b *Block) {
-	db.SaveBlock(b.Hash, utils.ToBytes(b))
+	dbStorage.SaveBlock(b.Hash, utils.ToBytes(b))
 }
 
 func (b *Block) restore(data []byte) {
@@ -30,7 +29,7 @@ func (b *Block) restore(data []byte) {
 }
 
 func FindBlock(hash string) (*Block, error) {
-	blockBytes := db.Block(hash)
+	blockBytes := dbStorage.FindBlock(hash)
 	if blockBytes == nil {
 		return nil, ErrNotFound
 	}
