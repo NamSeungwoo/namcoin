@@ -47,7 +47,7 @@ func TestRecalculateDifficulty(t *testing.T) {
 				return utils.ToBytes(blocks[fakeBlock])
 			},
 		}
-		bc := &blockchain{Height: 5, CurrentDifficulty: 3}
+		bc := &blockchain{} //{Height: 5, CurrentDifficulty: 3}
 		got := recalculateDifficulty(bc)
 		t.Errorf(" recalculateDifficulty should return %d got %d", bc.CurrentDifficulty+1, got)
 
@@ -92,7 +92,7 @@ func TestRecalculateDifficulty(t *testing.T) {
 				return utils.ToBytes(blocks[fakeBlock])
 			},
 		}
-		bc := &blockchain{Height: 5, CurrentDifficulty: 3}
+		bc := &blockchain{} //{Height: 5, CurrentDifficulty: 3}
 		got := recalculateDifficulty(bc)
 		t.Errorf(" recalculateDifficulty should return %d got %d", bc.CurrentDifficulty-1, got)
 	})
